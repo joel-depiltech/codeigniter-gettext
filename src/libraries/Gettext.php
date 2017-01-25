@@ -3,6 +3,8 @@
 defined('BASEPATH') || exit('No direct script access allowed');
 // @codeCoverageIgnoreEnd
 
+use Gettext\GettextTranslator;
+
 /**
  * Codeigniter PHP framework library class for dealing with gettext.
  *
@@ -30,7 +32,6 @@ class Gettext
             array(
                 'gettext_locale_dir' => config_item('gettext_locale_dir'),
                 'gettext_text_domain' => config_item('gettext_text_domain'),
-                'gettext_catalog_codeset' => config_item('gettext_catalog_codeset'),
                 'gettext_locale' => config_item('gettext_locale')
             ),
             $config
@@ -46,78 +47,16 @@ class Gettext
      */
     public static function init(array $config)
     {
-        // Gettext catalog codeset
-        $IsBindTextDomainCodeset = bind_textdomain_codeset(
-            $config['gettext_text_domain'],
-            $config['gettext_catalog_codeset']
-        );
+        // Create the translator instance
+        $t = new GettextTranslator();
 
-        log_message(
-            (is_string($IsBindTextDomainCodeset) ? 'info' : 'error'),
-            'Gettext Library -> Try to bind text domain code set: ' .
-            $config['gettext_catalog_codeset']
-        );
+        // Set the language
+        $t->setLanguage($config['gettext_locale']);
 
-        // Path to gettext locales directory relative to FCPATH.APPPATH
-        $IsBindTextDomain = bindtextdomain(
+        // Load the domain
+        $t->loadDomain(
             $config['gettext_text_domain'],
             APPPATH . $config['gettext_locale_dir']
-        );
-
-        log_message(
-            (is_string($IsBindTextDomain) ? 'info' : 'error'),
-            'Gettext Library -> Try to bind text domain directory: ' .
-            APPPATH . $config['gettext_locale_dir']
-        );
-
-        // Gettext domain
-        $IsSetTextDomain = textdomain(
-            $config['gettext_text_domain']
-        );
-
-        log_message(
-            (is_string($IsSetTextDomain) ? 'info' : 'error'),
-            'Gettext Library -> Try to set text domain: ' .
-            $config['gettext_text_domain']
-        );
-
-        // Gettext locale
-        $IsSetLocale = setlocale(
-            LC_ALL,
-            $config['gettext_locale']
-        );
-
-        log_message(
-            (is_string($IsSetLocale) ? 'info' : 'error'),
-            'Gettext Library -> Try to set locale: ' .
-            (is_array($config['gettext_locale']) ?
-                print_r($config['gettext_locale'], TRUE) : $config['gettext_locale']
-            )
-        );
-
-        // Change environment language for CLI
-        $IsPutEnv = putenv('LANGUAGE=' . (is_array($config['gettext_locale']) ? $config['gettext_locale'][0] : $config['gettext_locale']));
-
-        log_message(
-            ($IsPutEnv === TRUE ? 'info' : 'error'),
-            'Gettext Library -> Try to set environment language: ' .
-            (is_array($config['gettext_locale']) ?
-                $config['gettext_locale'][0] : $config['gettext_locale']
-            )
-        );
-
-        // MO file exists for language
-        $file = APPPATH . $config['gettext_locale_dir'] .
-            '/' . $IsSetLocale .
-            '/LC_MESSAGES/' .
-            $config['gettext_text_domain'] . '.mo'
-        ;
-        $IsFileExists = is_file($file);
-
-        log_message(
-            ($IsFileExists === TRUE ? 'info' : 'error'),
-            'Gettext Library -> Try to check MO file exists: ' .
-            $file
         );
     }
 }
