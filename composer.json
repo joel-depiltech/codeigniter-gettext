@@ -7,7 +7,7 @@
     "keywords": ["codeigniter", "gettext", "i18n", "translation", "language"],
     "authors": [
         {
-            "name": "Joël Gaujard",
+            "name": "Joël Gaujard @ Dépil Tech",
             "email": "joel@depiltech.com"
         },
         {
@@ -19,6 +19,7 @@
     "minimum-stability": "stable",
     "prefer-stable": true,
     "require": {
+        "gettext/gettext": "^4.2",
         "php": ">=5.6"
     },
     "require-dev": {
