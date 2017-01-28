@@ -19,7 +19,8 @@ if (!function_exists('__')) {
      */
     function __($expression)
     {
-        return (gettext($expression));
+        $CI = &get_instance();
+        return ($CI->gettext->gettext($expression));
     }
 }
 
