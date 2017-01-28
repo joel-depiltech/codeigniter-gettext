@@ -3,6 +3,9 @@
 defined('BASEPATH') || exit('No direct script access allowed');
 // @codeCoverageIgnoreEnd
 
+// Gettext catalog codeset
+$config['gettext_catalog_codeset'] = 'UTF-8';
+
 // Gettext domain
 $config['gettext_text_domain'] = 'default';
 
