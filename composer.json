@@ -7,7 +7,7 @@
     "keywords": ["codeigniter", "gettext", "i18n", "translation", "language"],
     "authors": [
         {
-            "name": "Joël Gaujard @ Dépil Tech",
+            "name": "Dépil Tech",
             "email": "joel@depiltech.com"
         },
         {
@@ -26,7 +26,9 @@
         "phpunit/phpunit": "^5.7"
     },
     "autoload": {
-        "classmap": ["src/"],
+        "classmap": ["src/"]
+    },
+    "autoload-dev": {
         "psr-4": {
             "CodeIgniterGetText\\Tests\\": "tests/"
         },
