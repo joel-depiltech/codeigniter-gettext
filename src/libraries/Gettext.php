@@ -58,7 +58,6 @@ class Gettext extends Translator
         ;
         $path .= '/LC_MESSAGES/' . $config['gettext_text_domain'] . '.po';
 
-        echo $path;
         return($path);
     }
 
@@ -74,7 +73,6 @@ class Gettext extends Translator
         ;
         $path .= '.php';
 
-        echo $path;
         return($path);
     }
 
