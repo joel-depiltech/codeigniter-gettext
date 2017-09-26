@@ -19,7 +19,7 @@ class HelperTest extends \PHPUnit_Framework_TestCase
         _e(self::EXPRESSION);
     }
 
-    public function testUnderscroreN_Singular()
+    public function testUnderscoreN_Singular()
     {
         $this->assertTrue(function_exists('_n'), "_e function do not exists.");
         $this->assertEquals(
@@ -28,7 +28,7 @@ class HelperTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function testUnderscroreN_Plural()
+    public function testUnderscoreN_Plural()
     {
         $this->assertTrue(function_exists('_n'), "_e function do not exists.");
         $this->assertEquals(

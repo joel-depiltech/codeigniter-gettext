@@ -28,20 +28,20 @@ class TranslationTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals("Une expression en Français", __("A expression in English"));
     }
 
-    public function testUnderscroreE()
+    public function testUnderscoreE()
     {
         $this->expectOutputRegex("/(Une expression en Français)$/");
         _e("A expression in English");
     }
 
-    public function testUnderscroreN_Singular()
+    public function testUnderscoreN_Singular()
     {
         $this->assertEquals(
             "Une expression en Français", __("A expression in English"), 1
         );
     }
 
-    public function testUnderscroreN_Plural()
+    public function testUnderscoreN_Plural()
     {
         $this->assertEquals(
             "Une expression en Français", __("A expression in English"), 2
