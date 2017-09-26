@@ -9,6 +9,8 @@
 >
     <php>
         <ini name="error_reporting" value="-1" />
+        <const name="PHPUNIT_TESTING" value="TRUE"/>
+        <const name="BASEPATH" value="TRUE"/>
     </php>
 
     <testsuites>
@@ -33,10 +35,5 @@
         <log type="coverage-text" target="php://stdout" showUncoveredFiles="false" showOnlySummary="true" />
         <log type="junit" target="report/junit.xml" logIncompleteSkipped="true" />
     </logging>
-
-    <php>
-        <const name="PHPUNIT_TESTING" value="TRUE"/>
-        <const name="BASEPATH" value="TRUE"/>
-    </php>
 
 </phpunit>

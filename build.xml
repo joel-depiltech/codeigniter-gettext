@@ -5,16 +5,12 @@
 
 	<target name="UnitTestReport">
 
-		<echo msg="START Report generation" />
-
 		<phpunitreport
 			infile="report/junit.xml"
 			format="noframes"
 			todir="report/"
 			styledir="vendor/phing/phing/etc/"
 		/>
-
-		<echo msg="FINISH Report generation" />
 
 	</target>
 
