@@ -3,8 +3,6 @@ namespace CodeIgniterGetText\Tests;
 
 class TranslationTest extends \PHPUnit_Framework_TestCase
 {
-    const EXPRESSION = "Let me test this expression";
-
     /**
      * @before
      */
@@ -25,26 +23,22 @@ class TranslationTest extends \PHPUnit_Framework_TestCase
 
     public function testDoubleUnderscore()
     {
-        $this->assertEquals("Une expression en Français", __("A expression in English"));
+        $this->assertEquals('Une expression en Français', __('A expression in English'));
     }
 
     public function testUnderscoreE()
     {
-        $this->expectOutputRegex("/(Une expression en Français)$/");
-        _e("A expression in English");
+        $this->expectOutputRegex('/' . preg_quote('Une expression en Français') . '$/');
+        _e('A expression in English');
     }
 
-    public function testUnderscoreN_Singular()
+    public function testUnderscoreN()
     {
         $this->assertEquals(
-            "Une expression en Français", __("A expression in English"), 1
+            'Une expression au singulier', _n('A singular expression', 'A plural expression', 1)
         );
-    }
-
-    public function testUnderscoreN_Plural()
-    {
         $this->assertEquals(
-            "Une expression en Français", __("A expression in English"), 2
+            'Une expression au pluriel', _n('A singular expression', 'A plural expression', 2)
         );
     }
 

@@ -7,9 +7,9 @@ defined('BASEPATH') || exit('No direct script access allowed');
  * CodeIgniter Gettext Helpers
  *
  * @package        CodeIgniter
- * @subpackage    Helpers
- * @category    Gettext
- * @author        Joël Gaujard <j.gaujard@gmail.com>
+ * @subpackage     Helpers
+ * @category       Gettext
+ * @author         Joël Gaujard <j.gaujard@gmail.com>
  */
 
 if (!function_exists('__')) {
