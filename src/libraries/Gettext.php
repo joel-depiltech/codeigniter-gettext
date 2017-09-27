@@ -46,79 +46,109 @@ class Gettext
      */
     public static function init(array $config)
     {
-        // Gettext catalog codeset
-        $isBindTextDomainCodeset = bind_textdomain_codeset(
-            $config['gettext_text_domain'],
-            $config['gettext_catalog_codeset']
-        );
+        self::bindTextDomainCodeSet($config['gettext_text_domain'], $config['gettext_catalog_codeset']);
+        self::bindTextDomain($config['gettext_text_domain'], $config['gettext_locale_dir']);
+        self::textDomain($config['gettext_text_domain']);
+        $locale = self::setLocale($config['gettext_locale'], LC_ALL);
+        self::putEnv($locale);
+        self::checkLocaleFile($locale, $config['gettext_locale_dir'], $config['gettext_text_domain']);
+    }
+
+    /**
+     * Gettext catalog codeset
+     * @param string $textDomain
+     * @param string $catalogCodeSet
+     */
+    public static function bindTextDomainCodeSet($textDomain, $catalogCodeSet)
+    {
+        $isBindTextDomainCodeSet = bind_textdomain_codeset($textDomain, $catalogCodeSet);
 
         log_message(
-            (is_string($isBindTextDomainCodeset) ? 'info' : 'error'),
-            'Gettext Library -> Bind text domain code set: ' .
-            $config['gettext_catalog_codeset']
+            (is_string($isBindTextDomainCodeSet) ? 'info' : 'error'),
+            'Gettext Library -> Bind ' .
+            'text domain: ' . $textDomain . ' - ' .
+            'with code set: ' . $catalogCodeSet
         );
+    }
 
-        // Path to gettext locales directory relative to FCPATH.APPPATH
-        $isBindTextDomain = bindtextdomain(
-            $config['gettext_text_domain'],
-            APPPATH . $config['gettext_locale_dir']
-        );
+    /**
+     * Path to gettext locales directory relative to APPPATH
+     * @param string $textDomain
+     * @param string $localeDir
+     */
+    public static function bindTextDomain($textDomain, $localeDir)
+    {
+        $isBindTextDomain = bindtextdomain($textDomain, APPPATH . $localeDir);
 
         log_message(
             (is_string($isBindTextDomain) ? 'info' : 'error'),
-            'Gettext Library -> Bind text domain directory: ' .
-            APPPATH . $config['gettext_locale_dir']
+            'Gettext Library -> Bind ' .
+            'text domain: ' . $textDomain . ' - ' .
+            'with directory: ' . APPPATH . $localeDir
         );
+    }
 
-        // Gettext domain
-        $isSetTextDomain = textdomain(
-            $config['gettext_text_domain']
-        );
+    /**
+     * Gettext domain
+     * @param string $textDomain
+     */
+    public static function textDomain($textDomain)
+    {
+        $isSetTextDomain = textdomain($textDomain);
 
         log_message(
             (is_string($isSetTextDomain) ? 'info' : 'error'),
-            'Gettext Library -> Set text domain: ' .
-            $config['gettext_text_domain']
+            'Gettext Library -> Set text domain: ' . $textDomain
         );
+    }
 
-        // Gettext locale
-        $isSetLocale = setlocale(
-            LC_ALL,
-            $config['gettext_locale']
-        );
+    /**
+     * Gettext locale
+     * @param string|array $locale
+     * @param int $category
+     * @return string|FALSE the new current locale, or FALSE if the locale is not implemented on your platform
+     */
+    public static function setLocale($locale, $category = LC_ALL)
+    {
+        $isSetLocale = setlocale($category, $locale);
 
         log_message(
             (is_string($isSetLocale) ? 'info' : 'error'),
-            'Gettext Library -> Set locale: ' .
-            (is_array($config['gettext_locale']) ?
-                print_r($config['gettext_locale'], TRUE) : $config['gettext_locale']
-            )
+            'Gettext Library -> ' .
+            'Set locale: ' . (is_array($locale) ? print_r($locale, TRUE) : $locale). ' ' .
+            'for category: ' . $category
         );
 
-        // Change environment language for CLI
-        $gettext_locale = is_array($config['gettext_locale'])
-            ? $config['gettext_locale'][key($config['gettext_locale'])]
-            : $config['gettext_locale']
-        ;
-        $isPutEnv = putenv('LANGUAGE=' . $gettext_locale);
+        return $isSetLocale;
+    }
+
+    /**
+     * Change environment language for CLI
+     * @param string $locale
+     */
+    public static function putEnv($locale)
+    {
+        $isPutEnv = putenv('LANGUAGE=' . $locale);
 
         log_message(
             ($isPutEnv === TRUE ? 'info' : 'error'),
-            'Gettext Library -> Set environment language: ' . $gettext_locale
+            'Gettext Library -> Set environment language: ' . $locale
         );
+    }
 
-        // MO file exists for language
-        $file = APPPATH . $config['gettext_locale_dir'] .
-            '/' . $isSetLocale .
-            '/LC_MESSAGES/' .
-            $config['gettext_text_domain'] . '.mo'
-        ;
-        $isFileExists = is_file($file);
+    /**
+     * MO file exists for locale
+     * @param string $locale
+     * @param string $localeDir
+     * @param string $textDomain
+     */
+    public static function checkLocaleFile($locale, $localeDir, $textDomain)
+    {
+        $file = APPPATH . $localeDir . '/' . $locale . '/LC_MESSAGES/' . $textDomain . '.mo';
 
         log_message(
-            ($isFileExists === TRUE ? 'info' : 'error'),
-            'Gettext Library -> Check MO file exists: ' .
-            $file
+            (is_file($file) === TRUE ? 'info' : 'error'),
+            'Gettext Library -> Check MO file exists: ' . $file
         );
     }
 }
