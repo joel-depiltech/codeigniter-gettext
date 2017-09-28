@@ -11,73 +11,73 @@ class LibraryTest extends \PHPUnit_Framework_TestCase
         return ($regex);
     }
 
-    public function testCatalogCodeSetSuccess()
+    public function testCatalogCodeSetDefaultConfig()
     {
         $this->expectOutputRegex($this->_regex('bind text domain(.*)with code set'));
         $this->_loadLibraryWithDefaultConfig();
     }
 
-    public function testCatalogCodeSetError()
+    public function testCatalogCodeSetOtherConfig()
     {
         $this->expectOutputRegex($this->_regex('bind text domain(.*)with code set'));
         $this->_loadLibraryWithOtherConfig();
     }
 
-    public function testLocaleDirSuccess()
+    public function testLocaleDirDefaultConfig()
     {
-        $this->expectOutputRegex($this->_regex('bind text domain(.*)with directory', FALSE));
+        $this->expectOutputRegex($this->_regex('bind text domain(.*)with directory'));
         $this->_loadLibraryWithDefaultConfig();
     }
 
-    public function testLocaleDirError()
+    public function testLocaleDirOtherConfig()
     {
         $this->expectOutputRegex($this->_regex('bind text domain(.*)with directory'));
         $this->_loadLibraryWithOtherConfig();
     }
 
-    public function testTextDomainSuccess()
+    public function testTextDomainDefaultConfig()
     {
         $this->expectOutputRegex($this->_regex('set text domain'));
         $this->_loadLibraryWithDefaultConfig();
     }
 
-    public function testTextDomainError()
+    public function testTextDomainOtherConfig()
     {
         $this->expectOutputRegex($this->_regex('set text domain'));
         $this->_loadLibraryWithOtherConfig();
     }
 
-    public function testLocaleSuccess()
+    public function testLocaleDefaultConfig()
     {
         $this->expectOutputRegex($this->_regex('set locale'));
         $this->_loadLibraryWithDefaultConfig();
     }
 
-    public function testLocaleError()
+    public function testLocaleOtherConfig()
     {
         $this->expectOutputRegex($this->_regex('set locale'));
         $this->_loadLibraryWithOtherConfig();
     }
 
-    public function testEnvironmentLanguageSuccess()
+    public function testEnvironmentLanguageDefaultConfig()
     {
         $this->expectOutputRegex($this->_regex('set environment language'));
         $this->_loadLibraryWithDefaultConfig();
     }
 
-    public function testEnvironmentLanguageError()
+    public function testEnvironmentLanguageOtherConfig()
     {
         $this->expectOutputRegex($this->_regex('set environment language'));
         $this->_loadLibraryWithOtherConfig();
     }
 
-    public function testFileExistsSuccess()
+    public function testFileExistsDefaultConfig()
     {
         $this->expectOutputRegex($this->_regex('check MO file exists', FALSE));
         $this->_loadLibraryWithDefaultConfig();
     }
 
-    public function testFileExistsError()
+    public function testFileExistsOtherConfig()
     {
         $this->expectOutputRegex($this->_regex('check MO file exists'));
         $this->_loadLibraryWithOtherConfig();
@@ -88,7 +88,7 @@ class LibraryTest extends \PHPUnit_Framework_TestCase
         $config = array();
         // Load default config array
         require(realpath(__DIR__ . '/../') . '/src/config/gettext.php');
-        \Gettext::init($config);
+        new \Gettext($config);
     }
 
     private function _loadLibraryWithOtherConfig()
@@ -99,7 +99,7 @@ class LibraryTest extends \PHPUnit_Framework_TestCase
             'gettext_catalog_codeset' => 'UTF-8',
             'gettext_locale' => 'fr_FR'
         );
-        \Gettext::init($config);
+        new \Gettext($config);
     }
 
 }

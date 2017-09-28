@@ -15,143 +15,169 @@ defined('BASEPATH') || exit('No direct script access allowed');
  */
 class Gettext
 {
+    /** @var string domain name match with file contains translation */
+    private $_textDomain;
+
+    /** @var string character encoding in which the messages are */
+    private $_catalogCodeSet;
+
+    /** @var string the path for a domain */
+    private $_localeDir;
+
+    /** @var string|array locale or array of locales */
+    private $_locale;
+
+    /** @var int constant specifying the category of the functions affected by the locale setting */
+    private $_category;
+
     /**
      * Initialize Codeigniter PHP framework and get configuration
      *
      * @codeCoverageIgnore
      * @param array $config Override default configuration
      */
-    public function __construct($config = array())
+    public function __construct(array $config = array())
     {
         log_message('info', 'Gettext Library Class Initialized');
 
-        // Merge $config and config/gettext.php $config
-        $config = array_merge(
-            array(
-                'gettext_locale_dir' => config_item('gettext_locale_dir'),
-                'gettext_text_domain' => config_item('gettext_text_domain'),
-                'gettext_catalog_codeset' => config_item('gettext_catalog_codeset'),
-                'gettext_locale' => config_item('gettext_locale')
-            ),
-            $config
-        );
+        $this->_setConfig($config);
 
-        self::init($config);
+        $this
+            ->_bindTextDomainCodeSet()
+            ->_bindTextDomain()
+            ->_textDomain()
+            ->_setLocale()
+            ->_putEnv()
+            ->_checkLocaleFile()
+        ;
     }
 
     /**
-     * Initialize gettext inside Codeigniter PHP framework.
-     *
-     * @param array $config configuration
+     * Merge config as parameter and default config (config/gettext.php file)
+     * @param array $config
      */
-    public static function init(array $config)
+    private function _setConfig(array $config = array())
     {
-        self::bindTextDomainCodeSet($config['gettext_text_domain'], $config['gettext_catalog_codeset']);
-        self::bindTextDomain($config['gettext_text_domain'], $config['gettext_locale_dir']);
-        self::textDomain($config['gettext_text_domain']);
-        $locale = self::setLocale($config['gettext_locale'], LC_ALL);
-        self::putEnv($locale);
-        self::checkLocaleFile($locale, $config['gettext_locale_dir'], $config['gettext_text_domain']);
+        $this->_localeDir = isset($config['gettext_locale_dir'])
+            ? $config['gettext_locale_dir'] : config_item('gettext_locale_dir');
+
+        $this->_textDomain = isset($config['gettext_text_domain'])
+            ? $config['gettext_text_domain'] : config_item('gettext_text_domain');
+
+        $this->_catalogCodeSet = isset($config['gettext_catalog_codeset'])
+            ? $config['gettext_catalog_codeset'] : config_item('gettext_catalog_codeset');
+
+        $this->_locale = isset($config['gettext_locale'])
+            ? $config['gettext_locale'] : config_item('gettext_locale');
+
+        $this->_category = LC_ALL;
     }
 
     /**
      * Gettext catalog codeset
-     * @param string $textDomain
-     * @param string $catalogCodeSet
+     * @return $this
      */
-    public static function bindTextDomainCodeSet($textDomain, $catalogCodeSet)
+    private function _bindTextDomainCodeSet()
     {
-        $isBindTextDomainCodeSet = bind_textdomain_codeset($textDomain, $catalogCodeSet);
+        $isBindTextDomainCodeSet = bind_textdomain_codeset($this->_textDomain, $this->_catalogCodeSet);
 
         log_message(
             (is_string($isBindTextDomainCodeSet) ? 'info' : 'error'),
             'Gettext Library -> Bind ' .
-            'text domain: ' . $textDomain . ' - ' .
-            'with code set: ' . $catalogCodeSet
+            'text domain: ' . $this->_textDomain . ' - ' .
+            'with code set: ' . $this->_catalogCodeSet
         );
+
+        return $this;
     }
 
     /**
      * Path to gettext locales directory relative to APPPATH
-     * @param string $textDomain
-     * @param string $localeDir
+     * @return $this
      */
-    public static function bindTextDomain($textDomain, $localeDir)
+    private function _bindTextDomain()
     {
-        $isBindTextDomain = bindtextdomain($textDomain, APPPATH . $localeDir);
+        $isBindTextDomain = bindtextdomain($this->_textDomain, APPPATH . $this->_localeDir);
 
         log_message(
             (is_string($isBindTextDomain) ? 'info' : 'error'),
             'Gettext Library -> Bind ' .
-            'text domain: ' . $textDomain . ' - ' .
-            'with directory: ' . APPPATH . $localeDir
+            'text domain: ' . $this->_textDomain . ' - ' .
+            'with directory: ' . APPPATH . $this->_localeDir
         );
+
+        return $this;
     }
 
     /**
      * Gettext domain
-     * @param string $textDomain
+     * @return $this
      */
-    public static function textDomain($textDomain)
+    private function _textDomain()
     {
-        $isSetTextDomain = textdomain($textDomain);
+        $isSetTextDomain = textdomain($this->_textDomain);
 
         log_message(
             (is_string($isSetTextDomain) ? 'info' : 'error'),
-            'Gettext Library -> Set text domain: ' . $textDomain
+            'Gettext Library -> Set text domain: ' . $this->_textDomain
         );
+
+        return $this;
     }
 
     /**
      * Gettext locale
-     * @param string|array $locale
-     * @param int $category
-     * @return string|FALSE the new current locale, or FALSE if the locale is not implemented on your platform
+     * @return $this
      */
-    public static function setLocale($locale, $category = LC_ALL)
+    private function _setLocale()
     {
-        $isSetLocale = setlocale($category, $locale);
+        $isSetLocale = setlocale($this->_category, $this->_locale);
 
         log_message(
             (is_string($isSetLocale) ? 'info' : 'error'),
             'Gettext Library -> ' .
-            'Set locale: ' . (is_array($locale) ? print_r($locale, TRUE) : $locale). ' ' .
-            'for category: ' . $category
+            'Set locale: ' . (is_array($this->_locale) ? print_r($this->_locale, TRUE) : $this->_locale). ' ' .
+            'for category: ' . $this->_category
         );
 
-        return $isSetLocale;
+        // the new current locale, or FALSE if the locale is not implemented on your platform
+        $this->_locale = $isSetLocale;
+
+        return $this;
     }
 
     /**
      * Change environment language for CLI
-     * @param string $locale
+     * @return $this
      */
-    public static function putEnv($locale)
+    private function _putEnv()
     {
-        $isPutEnv = putenv('LANGUAGE=' . $locale);
+        $isPutEnv = putenv('LANGUAGE=' . $this->_locale);
 
         log_message(
             ($isPutEnv === TRUE ? 'info' : 'error'),
-            'Gettext Library -> Set environment language: ' . $locale
+            'Gettext Library -> Set environment language: ' . $this->_locale
         );
+
+        return $this;
     }
 
     /**
      * MO file exists for locale
-     * @param string $locale
-     * @param string $localeDir
-     * @param string $textDomain
+     * @return $this
      */
-    public static function checkLocaleFile($locale, $localeDir, $textDomain)
+    private function _checkLocaleFile()
     {
-        $file = APPPATH . $localeDir . '/' . $locale . '/LC_MESSAGES/' . $textDomain . '.mo';
+        $file = APPPATH . $this->_localeDir . '/' . $this->_locale . '/LC_MESSAGES/' . $this->_textDomain . '.mo';
 
         log_message(
             (is_file($file) === TRUE ? 'info' : 'error'),
             'Gettext Library -> Check MO file exists: ' . $file
         );
+
+        return $this;
     }
 }
 
 /* End of file Gettext.php */
-/* Location: ./libraries/config/gettext.php */
+/* Location: ./libraries/gettext.php */
