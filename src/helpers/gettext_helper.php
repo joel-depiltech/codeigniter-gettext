@@ -17,8 +17,13 @@ if (!function_exists('__')) {
      * @param string $expression
      * @return string
      */
-    function __($expression)
+    function __($expression, $domain = NULL)
     {
+        if (!empty($domain)) {
+            (new \Gettext())->changeDomain($domain);
+            return (dgettext($domain, $expression));
+        }
+
         return (gettext($expression));
     }
 }
@@ -27,9 +32,9 @@ if (!function_exists('_e')) {
     /**
      * @param string $expression
      */
-    function _e($expression)
+    function _e($expression, $domain = NULL)
     {
-        echo (__($expression));
+        echo (__($expression, $domain));
     }
 }
 
@@ -40,8 +45,15 @@ if (!function_exists('_n')) {
      * @param $number
      * @return string
      */
-    function _n($expression_singular, $expression_plural, $number)
+    function _n($expression_singular, $expression_plural, $number, $domain = NULL)
     {
-        return (ngettext($expression_singular, $expression_plural, (int) $number));
+        $number = (int) $number;
+
+        if (!empty($domain)) {
+            (new \Gettext())->changeDomain($domain);
+            return (dngettext($domain, $expression_singular, $expression_plural, $number));
+        }
+
+        return (ngettext($expression_singular, $expression_plural, $number));
     }
 }

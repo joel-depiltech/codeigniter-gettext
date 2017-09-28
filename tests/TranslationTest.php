@@ -3,6 +3,8 @@ namespace CodeIgniterGetText\Tests;
 
 class TranslationTest extends \PHPUnit_Framework_TestCase
 {
+    const OVERRIDE_DOMAIN = 'override-domain';
+
     /**
      * @before
      */
@@ -18,7 +20,12 @@ class TranslationTest extends \PHPUnit_Framework_TestCase
         // only for avoid output when launch test
         $this->expectOutputRegex('//');
 
-        \Gettext::init($config);
+        new \Gettext($config);
+    }
+
+    public function testDoubleUnderscoreOverrideDomain()
+    {
+        $this->assertEquals('A expression overriden', __('A expression in English', self::OVERRIDE_DOMAIN));
     }
 
     public function testDoubleUnderscore()
@@ -32,6 +39,12 @@ class TranslationTest extends \PHPUnit_Framework_TestCase
         _e('A expression in English');
     }
 
+    public function testUnderscoreEOverrideDomain()
+    {
+        $this->expectOutputRegex('/' . preg_quote('A expression overriden') . '$/');
+        _e('A expression in English', self::OVERRIDE_DOMAIN);
+    }
+
     public function testUnderscoreN()
     {
         $this->assertEquals(
@@ -39,6 +52,18 @@ class TranslationTest extends \PHPUnit_Framework_TestCase
         );
         $this->assertEquals(
             'Une expression au pluriel', _n('A singular expression', 'A plural expression', 2)
+        );
+    }
+
+    public function testUnderscoreNOverrideDomain()
+    {
+        $this->assertEquals(
+            'A singular expression overriden',
+            _n('A singular expression', 'A plural expression', 1, self::OVERRIDE_DOMAIN)
+        );
+        $this->assertEquals(
+            'A plural expression overriden',
+            _n('A singular expression', 'A plural expression', 2, self::OVERRIDE_DOMAIN)
         );
     }
 

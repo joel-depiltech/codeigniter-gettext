@@ -53,6 +53,24 @@ class Gettext
     }
 
     /**
+     * Load a domain
+     * @param string $domain
+     */
+    public function changeDomain($domain)
+    {
+        log_message('info', 'Gettext Library Class -> Change domain');
+
+        $this->_textDomain = $domain;
+
+        $this
+            ->_bindTextDomainCodeSet()
+            ->_bindTextDomain()
+            ->_textDomain()
+            ->_checkLocaleFile()
+        ;
+    }
+
+    /**
      * Merge config as parameter and default config (config/gettext.php file)
      * @param array $config
      */
