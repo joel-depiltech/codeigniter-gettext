@@ -1,27 +1,29 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: CodeIgniter Gettext Test\n"
-"POT-Creation-Date: 2017-01-09 01:07+0100\n"
-"PO-Revision-Date: 2017-09-26 11:14+0200\n"
+"POT-Creation-Date: 2017-09-29 10:15+0200\n"
+"PO-Revision-Date: 2017-09-29 10:15+0200\n"
 "Last-Translator: Joël Gaujard <joel@depiltech.com>\n"
 "Language-Team: Joël Gaujard <j.gaujard@gmail.com>\n"
-"Language: fr_FR\n"
+"Language: en_GB\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 2.0.4\n"
 "X-Poedit-Basepath: ../../..\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-KeywordsList: __;_e;_n:1,2\n"
 "X-Poedit-SearchPath-0: .\n"
 
-#: TranslationTest.php:26 TranslationTest.php:32
+#: TranslationTest.php:28 TranslationTest.php:34 TranslationTest.php:50
+#: TranslationTest.php:55
 msgid "A expression in English"
-msgstr "Une expression en Français"
+msgstr "Same expression in British English"
 
-#: TranslationTest.php:38 TranslationTest.php:41
+#: TranslationTest.php:40 TranslationTest.php:43 TranslationTest.php:62
+#: TranslationTest.php:66
 msgid "A singular expression"
 msgid_plural "A plural expression"
-msgstr[0] "Une expression au singulier"
-msgstr[1] "Une expression au pluriel"
+msgstr[0] "Same singular expression in British English"
+msgstr[1] "Same plural expression in British English"
