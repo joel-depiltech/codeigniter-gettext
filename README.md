@@ -9,7 +9,7 @@ CodeIgniter Gettext
 
 This is [CodeIgniter](https://codeigniter.com) PHP framework package for dealing with [Gettext](https://www.gnu.org/software/gettext/).
 
-This package is a fork from Marko Martivović library : https://github.com/Marko-M/codeigniter-gettext
+This package is a fork from [Marko Martivović](https://github.com/Marko-M/codeigniter-gettext) library.
 
 Please use [Composer](https://getcomposer.org) to install it and include it as a package in your CodeIgniter application.
 
@@ -18,25 +18,44 @@ Instructions
 
 Please note that following steps assume that you have correctly installed gettext and configured Codeigniter on your server.
 
-1. Use composer to install this package
+1. Use **composer** to install this package
+
 `composer require joel-depiltech/codeigniter-gettext`
-2. Add this package to auto-load packages array
+
+2. Add this **package** to auto-load packages array (application/config/autoload.php)
+
 `$autoload['packages'] = array(FCPATH . 'vendor/joel-depiltech/codeigniter-gettext/src');`
+
 or include it with Loader library
+
 `$this->load->add_package_path(FCPATH . 'vendor/joel-depiltech/codeigniter-gettext/src');`
-3. Load default configuration file
-`$this->load->config('gettext');`
-or add it to auto-load config array
+
+3. Add default **configuration** file to auto-load config array (application/config/autoload.php)
+
 `$autoload['config'] = array('gettext');`
-4. Load the library
-`$this->load->library('gettext');`
-or add it to auto-load library array
+
+or include it with Loader library
+
+`$this->load->config('gettext');`
+
+4. Add the **library** to auto-load library array (application/config/autoload.php)
+
 `$autoload['library'] = array('gettext');`
-5. Load the helper
-`$this->load->helper('gettext');`
-or add it to auto-load helper array
+
+or include it with Loader library
+
+`$this->load->library('gettext');`
+
+5. Add the **helper** to auto-load library array (application/config/autoload.php)
+
 `$autoload['helper'] = array('gettext');`
-6. Create gettext locales directory according to your `gettext_locale_dir` (application/language/locales by default). Inside that directory create locale_name/LC_MESSAGES path for each of your locales and place your .mo files inside.
+
+or include it with Loader library
+
+`$this->load->helper('gettext');`
+
+6. Create gettext locales directory according to your `gettext_locale_dir` (application/language/locales by default).
+Inside that directory **create `locale_name/LC_MESSAGES` path for each of your locales** and place your .mo files inside.
 
 This is an example how to load Library overwriting default configuration:
 
