@@ -17,10 +17,14 @@ if (!function_exists('__')) {
      * @param string $expression
      * @return string
      */
-    function __($expression, $domain = NULL)
+    function __($expression, $domain = NULL, $category = NULL)
     {
         if (!empty($domain)) {
             (new \Gettext())->changeDomain($domain);
+
+            if (!empty($category))
+                return (dcgettext($domain, $expression, $category));
+
             return (dgettext($domain, $expression));
         }
 
@@ -45,12 +49,16 @@ if (!function_exists('_n')) {
      * @param $number
      * @return string
      */
-    function _n($expression_singular, $expression_plural, $number, $domain = NULL)
+    function _n($expression_singular, $expression_plural, $number, $domain = NULL, $category = NULL)
     {
         $number = (int) $number;
 
         if (!empty($domain)) {
             (new \Gettext())->changeDomain($domain);
+
+            if (!empty($category))
+                return (dcngettext($domain, $expression_singular, $expression_plural, $number, $category));
+
             return (dngettext($domain, $expression_singular, $expression_plural, $number));
         }
 
