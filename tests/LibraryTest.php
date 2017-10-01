@@ -9,7 +9,7 @@ class LibraryTest extends \PHPUnit_Framework_TestCase
         $config = array();
         // Load default config array
         require(realpath(__DIR__ . '/../') . '/src/config/gettext.php');
-        new \Gettext($config);
+        return new \Gettext($config);
     }
 
     private function _loadLibraryWithOtherConfig()
@@ -21,7 +21,7 @@ class LibraryTest extends \PHPUnit_Framework_TestCase
             'gettext_locale' => array('en_GB.UTF-8', 'en_GB'),
             'gettext_category' => 'LC_MESSAGES'
         );
-        new \Gettext($config);
+        return new \Gettext($config);
     }
 
     private function _regex($expression, $successful = TRUE)
@@ -101,6 +101,25 @@ class LibraryTest extends \PHPUnit_Framework_TestCase
     {
         $this->expectOutputRegex($this->_regex('check MO file exists'));
         $this->_loadLibraryWithOtherConfig();
+    }
+
+    public function testChangeDomain()
+    {
+        $newDomain = 'new-domain';
+        $this->expectOutputRegex('/info\|Gettext Library Class -> Change domain/');
+        $this->expectOutputRegex($this->_regex('Bind text domain: ' . $newDomain . ' - with code set:'));
+        $this->expectOutputRegex($this->_regex('Bind text domain: ' . $newDomain . ' - with directory:'));
+        $this->expectOutputRegex($this->_regex('Set text domain: ' . $newDomain . ''));
+        $this->expectOutputRegex($this->_regex('Check MO file exists(.*)' . $newDomain . '.mo', FALSE));
+        $this->_loadLibraryWithDefaultConfig()->changeDomain($newDomain);
+    }
+
+    public function testChangeCategory()
+    {
+        $newCategory = 'LC_MESSAGES';
+        $this->expectOutputRegex('/info\|Gettext Library Class -> Change category/');
+        $this->expectOutputRegex($this->_regex('Set locale(.*)for category: ' . $newCategory));
+        $this->_loadLibraryWithDefaultConfig()->changeCategory($newCategory);
     }
 
 }

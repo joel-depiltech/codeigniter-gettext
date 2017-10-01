@@ -92,6 +92,10 @@ class Gettext
         ;
     }
 
+    /**
+     * Switch to a category
+     * @param $category
+     */
     public function changeCategory($category)
     {
         log_message('info', 'Gettext Library Class -> Change category');
