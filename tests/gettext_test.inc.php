@@ -1,4 +1,10 @@
 <?php
+/**
+ * This file is include only for test
+ */
+
+// Simulate constants defined in CodeIgniter
+defined('APPPATH') || define('APPPATH', __DIR__ . '/');
 
 /**
  * Simulate helper functions
@@ -17,7 +23,7 @@ if (!function_exists('config_item')) {
     function config_item($key)
     {
         $config = array(); // initialize an empty array for avoid IDE error
-        require(realpath(__DIR__ . '/../../') . '/src/config/gettext.php');
+        require(realpath(__DIR__ . '/../') . '/src/config/gettext.php');
         return $config[$key];
     }
 }
