@@ -43,7 +43,7 @@ $config['gettext_locale'] = Array('en_US.UTF-8', 'en_US@euro', 'en_US.ISO88591',
  * LC_TIME for date and time formatting with strftime()
  * LC_MESSAGES for system responses (available if PHP was compiled with libintl)
  */
-$config['gettext_category'] = LC_ALL;
+$config['gettext_category'] = 'LC_ALL';
 
 /* End of file gettext.php */
 /* Location: ./application/config/gettext.php */

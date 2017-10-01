@@ -27,7 +27,7 @@ class Gettext
     /** @var string|array locale or array of locales */
     private $_locale;
 
-    /** @var int constant specifying the category of the functions affected by the locale setting */
+    /** @var string constant specifying the category of the functions affected by the locale setting */
     private $_category;
 
     /**
@@ -50,6 +50,28 @@ class Gettext
             ->_putEnv()
             ->_checkLocaleFile()
         ;
+    }
+
+    /**
+     * Merge config as parameter and default config (config/gettext.php file)
+     * @param array $config
+     */
+    private function _setConfig(array $config = array())
+    {
+        $this->_localeDir = isset($config['gettext_locale_dir'])
+            ? $config['gettext_locale_dir'] : config_item('gettext_locale_dir');
+
+        $this->_textDomain = isset($config['gettext_text_domain'])
+            ? $config['gettext_text_domain'] : config_item('gettext_text_domain');
+
+        $this->_catalogCodeSet = isset($config['gettext_catalog_codeset'])
+            ? $config['gettext_catalog_codeset'] : config_item('gettext_catalog_codeset');
+
+        $this->_locale = isset($config['gettext_locale'])
+            ? $config['gettext_locale'] : config_item('gettext_locale');
+
+        $this->_category = (isset($config['gettext_category'])
+            ? $config['gettext_category'] : config_item('gettext_category'));
     }
 
     /**
@@ -77,28 +99,6 @@ class Gettext
         $this->_category = $category;
 
         $this->_setLocale();
-    }
-
-    /**
-     * Merge config as parameter and default config (config/gettext.php file)
-     * @param array $config
-     */
-    private function _setConfig(array $config = array())
-    {
-        $this->_localeDir = isset($config['gettext_locale_dir'])
-            ? $config['gettext_locale_dir'] : config_item('gettext_locale_dir');
-
-        $this->_textDomain = isset($config['gettext_text_domain'])
-            ? $config['gettext_text_domain'] : config_item('gettext_text_domain');
-
-        $this->_catalogCodeSet = isset($config['gettext_catalog_codeset'])
-            ? $config['gettext_catalog_codeset'] : config_item('gettext_catalog_codeset');
-
-        $this->_locale = isset($config['gettext_locale'])
-            ? $config['gettext_locale'] : config_item('gettext_locale');
-
-        $this->_category = (int) (isset($config['gettext_category'])
-            ? $config['gettext_category'] : config_item('gettext_category'));
     }
 
     /**
@@ -159,7 +159,7 @@ class Gettext
      */
     private function _setLocale()
     {
-        $isSetLocale = setlocale($this->_category, $this->_locale);
+        $isSetLocale = setlocale(constant($this->_category), $this->_locale);
 
         log_message(
             (is_string($isSetLocale) ? 'info' : 'error'),
@@ -181,10 +181,21 @@ class Gettext
     private function _putEnv()
     {
         $isPutEnv = putenv('LANGUAGE=' . $this->_locale);
-
         log_message(
-            ($isPutEnv === TRUE ? 'info' : 'error'),
-            'Gettext Library -> Set environment language: ' . $this->_locale
+            ($isPutEnv ? 'info' : 'error'),
+            'Gettext Library -> Set environment LANGUAGE: ' . $this->_locale
+        );
+
+        $isPutEnv = putenv('LANG=' . $this->_locale);
+        log_message(
+            ($isPutEnv ? 'info' : 'error'),
+            'Gettext Library -> Set environment LANG: ' . $this->_locale
+        );
+
+        $isPutEnv = putenv($this->_category . '=' . $this->_locale);
+        log_message(
+            ($isPutEnv ? 'info' : 'error'),
+            'Gettext Library -> Set environment category ' . $this->_category . ': ' . $this->_locale
         );
 
         return $this;

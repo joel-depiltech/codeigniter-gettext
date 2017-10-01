@@ -37,7 +37,8 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
     public function testCategory()
     {
         $config = config_item('gettext_category');
-        $this->assertTrue(is_int($config));
+        $this->assertFalse(empty($config));
+        $this->assertTrue(is_string($config));
     }
 
 }

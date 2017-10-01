@@ -18,7 +18,8 @@ class LibraryTest extends \PHPUnit_Framework_TestCase
             'gettext_locale_dir' => 'translations',
             'gettext_text_domain' => 'my-domain',
             'gettext_catalog_codeset' => 'UTF-8',
-            'gettext_locale' => array('en_GB.UTF-8', 'en_GB')
+            'gettext_locale' => array('en_GB.UTF-8', 'en_GB'),
+            'gettext_category' => 'LC_MESSAGES'
         );
         new \Gettext($config);
     }
