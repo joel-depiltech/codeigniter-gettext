@@ -15,6 +15,8 @@ defined('BASEPATH') || exit('No direct script access allowed');
 if (!function_exists('__')) {
     /**
      * @param string $expression
+     * @param string $domain
+     * @param string $category
      * @return string
      */
     function __($expression, $domain = NULL, $category = NULL)
@@ -22,8 +24,10 @@ if (!function_exists('__')) {
         if (!empty($domain)) {
             (new \Gettext())->changeDomain($domain);
 
-            if (!empty($category))
+            if (!empty($category)) {
+                $category = is_int($category) ? $category : constant($category);
                 return (dcgettext($domain, $expression, $category));
+            }
 
             return (dgettext($domain, $expression));
         }
@@ -35,18 +39,22 @@ if (!function_exists('__')) {
 if (!function_exists('_e')) {
     /**
      * @param string $expression
+     * @param string $domain
+     * @param string $category
      */
-    function _e($expression, $domain = NULL)
+    function _e($expression, $domain = NULL, $category = NULL)
     {
-        echo (__($expression, $domain));
+        echo (__($expression, $domain, $category));
     }
 }
 
 if (!function_exists('_n')) {
     /**
-     * @param $expression_singular
-     * @param $expression_plural
-     * @param $number
+     * @param string $expression_singular
+     * @param string $expression_plural
+     * @param int $number
+     * @param string $domain
+     * @param string $category
      * @return string
      */
     function _n($expression_singular, $expression_plural, $number, $domain = NULL, $category = NULL)
@@ -56,8 +64,10 @@ if (!function_exists('_n')) {
         if (!empty($domain)) {
             (new \Gettext())->changeDomain($domain);
 
-            if (!empty($category))
+            if (!empty($category)) {
+                $category = is_int($category) ? $category : constant($category);
                 return (dcngettext($domain, $expression_singular, $expression_plural, $number, $category));
+            }
 
             return (dngettext($domain, $expression_singular, $expression_plural, $number));
         }

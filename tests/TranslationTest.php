@@ -67,4 +67,50 @@ class TranslationTest extends \PHPUnit_Framework_TestCase
         );
     }
 
+
+    public function testDoubleUnderscoreOverrideDomainAndCategory()
+    {
+        $this->assertEquals(
+            'A expression overridden',
+            __('A expression in English', self::OVERRIDE_DOMAIN, 'LC_MESSAGES')
+        );
+        $this->assertEquals(
+            'A expression in English',
+            __('A expression in English', self::OVERRIDE_DOMAIN, 'LC_TIME')
+        );
+    }
+
+    public function testUnderscoreEOverrideDomainAndCategory()
+    {
+        $this->expectOutputRegex('/' . preg_quote('A expression overridden') . '$/');
+        _e('A expression in English', self::OVERRIDE_DOMAIN, 'LC_MESSAGES');
+    }
+
+    public function testUnderscoreEOverrideDomainAndCategoryError()
+    {
+        $this->expectOutputRegex('/' . preg_quote('A expression in English') . '$/');
+        _e('A expression in English', self::OVERRIDE_DOMAIN, 'LC_TIME');
+    }
+
+    public function testUnderscoreNOverrideDomainAndCategory()
+    {
+        $this->assertEquals(
+            'A singular expression overridden',
+            _n('A singular expression', 'A plural expression', 1, self::OVERRIDE_DOMAIN, 'LC_MESSAGES')
+        );
+        $this->assertEquals(
+            'A plural expression overridden',
+            _n('A singular expression', 'A plural expression', 2, self::OVERRIDE_DOMAIN, 'LC_MESSAGES')
+        );
+
+        $this->assertEquals(
+            'A singular expression',
+            _n('A singular expression', 'A plural expression', 1, self::OVERRIDE_DOMAIN, 'LC_TIME')
+        );
+        $this->assertEquals(
+            'A plural expression',
+            _n('A singular expression', 'A plural expression', 2, self::OVERRIDE_DOMAIN, 'LC_TIME')
+        );
+    }
+
 }
