@@ -3,7 +3,7 @@ namespace CodeIgniterGetText\Tests;
 
 class TranslationTest extends \PHPUnit_Framework_TestCase
 {
-    const EXPRESSION = "Let me test this expression";
+    const OVERRIDE_DOMAIN = 'override-domain';
 
     /**
      * @before
@@ -20,31 +20,50 @@ class TranslationTest extends \PHPUnit_Framework_TestCase
         // only for avoid output when launch test
         $this->expectOutputRegex('//');
 
-        \Gettext::init($config);
+        new \Gettext($config);
+    }
+
+    public function testDoubleUnderscoreOverrideDomain()
+    {
+        $this->assertEquals('A expression overriden', __('A expression in English', self::OVERRIDE_DOMAIN));
     }
 
     public function testDoubleUnderscore()
     {
-        $this->assertEquals("Une expression en Français", __("A expression in English"));
+        $this->assertEquals('Une expression en Français', __('A expression in English'));
     }
 
-    public function testUnderscroreE()
+    public function testUnderscoreE()
     {
-        $this->expectOutputRegex("/(Une expression en Français)$/");
-        _e("A expression in English");
+        $this->expectOutputRegex('/' . preg_quote('Une expression en Français') . '$/');
+        _e('A expression in English');
     }
 
-    public function testUnderscroreN_Singular()
+    public function testUnderscoreEOverrideDomain()
+    {
+        $this->expectOutputRegex('/' . preg_quote('A expression overriden') . '$/');
+        _e('A expression in English', self::OVERRIDE_DOMAIN);
+    }
+
+    public function testUnderscoreN()
     {
         $this->assertEquals(
-            "Une expression en Français", __("A expression in English"), 1
+            'Une expression au singulier', _n('A singular expression', 'A plural expression', 1)
+        );
+        $this->assertEquals(
+            'Une expression au pluriel', _n('A singular expression', 'A plural expression', 2)
         );
     }
 
-    public function testUnderscroreN_Plural()
+    public function testUnderscoreNOverrideDomain()
     {
         $this->assertEquals(
-            "Une expression en Français", __("A expression in English"), 2
+            'A singular expression overriden',
+            _n('A singular expression', 'A plural expression', 1, self::OVERRIDE_DOMAIN)
+        );
+        $this->assertEquals(
+            'A plural expression overriden',
+            _n('A singular expression', 'A plural expression', 2, self::OVERRIDE_DOMAIN)
         );
     }
 
