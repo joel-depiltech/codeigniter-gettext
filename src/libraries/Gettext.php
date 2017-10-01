@@ -70,6 +70,15 @@ class Gettext
         ;
     }
 
+    public function changeCategory($category)
+    {
+        log_message('info', 'Gettext Library Class -> Change category');
+
+        $this->_category = $category;
+
+        $this->_setLocale();
+    }
+
     /**
      * Merge config as parameter and default config (config/gettext.php file)
      * @param array $config
@@ -88,7 +97,8 @@ class Gettext
         $this->_locale = isset($config['gettext_locale'])
             ? $config['gettext_locale'] : config_item('gettext_locale');
 
-        $this->_category = LC_ALL;
+        $this->_category = (int) (isset($config['gettext_category'])
+            ? $config['gettext_category'] : config_item('gettext_category'));
     }
 
     /**
