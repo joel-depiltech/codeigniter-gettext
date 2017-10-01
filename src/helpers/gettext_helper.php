@@ -19,16 +19,16 @@ if (!function_exists('__')) {
      */
     function __($expression, $domain = NULL, $category = NULL)
     {
-        if (!empty($domain)) {
-            (new \Gettext())->changeDomain($domain);
+        //Create the translator instance
+        #$t = new GettextTranslator();
+        #$t->setLanguage('fr');
+        #$t->loadDomain('my-domain', dirname(__FILE__) . '/testTranslations/');
 
-            if (!empty($category))
-                return (dcgettext($domain, $expression, $category));
+        $t = new Translator();
+        $translations = \Gettext\Translations::fromMoFile(dirname(__FILE__) . '/../../tests/testTranslations/fr_FR/LC_MESSAGES/my-domain.mo');
+        $t->loadTranslations($translations);
 
-            return (dgettext($domain, $expression));
-        }
-
-        return (gettext($expression));
+        return ($t->gettext($expression));
     }
 }
 
