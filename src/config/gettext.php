@@ -30,7 +30,8 @@ $config['gettext_locale_dir'] = 'language/locales';
  * This is useful if a locale is known under different names on different systems
  * or for providing a fallback for a possibly not available locale.
  */
-$config['gettext_locale'] = Array("en_US.UTF-8", "en_US@euro", "en_US", "english", "eng", "en");
+// Gettext locale
+$config['gettext_locale'] = Array('en_US.UTF-8', 'en_US@euro', 'en_US.ISO88591', 'en_US', 'english', 'eng', 'en');
 
 /**
  * Gettext Category is a named constant specifying the category of the functions affected by the locale setting:

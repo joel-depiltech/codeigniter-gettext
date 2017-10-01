@@ -8,13 +8,13 @@ class TranslationTest extends \PHPUnit_Framework_TestCase
     /**
      * @before
      */
-    public function testFrenchLocale()
+    public function testOtherLocale()
     {
         $config = array(
-            'gettext_locale_dir' => 'testTranslations',
+            'gettext_locale_dir' => 'translations',
             'gettext_text_domain' => 'my-domain',
             'gettext_catalog_codeset' => 'UTF-8',
-            'gettext_locale' => 'fr_FR'
+            'gettext_locale' => array('en_GB.UTF-8', 'en_GB')
         );
 
         // only for avoid output when launch test
@@ -23,46 +23,46 @@ class TranslationTest extends \PHPUnit_Framework_TestCase
         new \Gettext($config);
     }
 
-    public function testDoubleUnderscoreOverrideDomain()
-    {
-        $this->assertEquals('A expression overriden', __('A expression in English', self::OVERRIDE_DOMAIN));
-    }
-
     public function testDoubleUnderscore()
     {
-        $this->assertEquals('Une expression en Français', __('A expression in English'));
+        $this->assertEquals('Same expression in British English', __('A expression in English'));
     }
 
     public function testUnderscoreE()
     {
-        $this->expectOutputRegex('/' . preg_quote('Une expression en Français') . '$/');
+        $this->expectOutputRegex('/' . preg_quote('Same expression in British English') . '$/');
         _e('A expression in English');
-    }
-
-    public function testUnderscoreEOverrideDomain()
-    {
-        $this->expectOutputRegex('/' . preg_quote('A expression overriden') . '$/');
-        _e('A expression in English', self::OVERRIDE_DOMAIN);
     }
 
     public function testUnderscoreN()
     {
         $this->assertEquals(
-            'Une expression au singulier', _n('A singular expression', 'A plural expression', 1)
+            'Same singular expression in British English', _n('A singular expression', 'A plural expression', 1)
         );
         $this->assertEquals(
-            'Une expression au pluriel', _n('A singular expression', 'A plural expression', 2)
+            'Same plural expression in British English', _n('A singular expression', 'A plural expression', 2)
         );
+    }
+
+    public function testUnderscoreEOverrideDomain()
+    {
+        $this->expectOutputRegex('/' . preg_quote('A expression overridden') . '$/');
+        _e('A expression in English', self::OVERRIDE_DOMAIN);
+    }
+
+    public function testDoubleUnderscoreOverrideDomain()
+    {
+        $this->assertEquals('A expression overridden', __('A expression in English', self::OVERRIDE_DOMAIN));
     }
 
     public function testUnderscoreNOverrideDomain()
     {
         $this->assertEquals(
-            'A singular expression overriden',
+            'A singular expression overridden',
             _n('A singular expression', 'A plural expression', 1, self::OVERRIDE_DOMAIN)
         );
         $this->assertEquals(
-            'A plural expression overriden',
+            'A plural expression overridden',
             _n('A singular expression', 'A plural expression', 2, self::OVERRIDE_DOMAIN)
         );
     }

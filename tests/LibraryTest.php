@@ -4,6 +4,25 @@ namespace CodeIgniterGetText\Tests;
 class LibraryTest extends \PHPUnit_Framework_TestCase
 {
 
+    private function _loadLibraryWithDefaultConfig()
+    {
+        $config = array();
+        // Load default config array
+        require(realpath(__DIR__ . '/../') . '/src/config/gettext.php');
+        new \Gettext($config);
+    }
+
+    private function _loadLibraryWithOtherConfig()
+    {
+        $config = array(
+            'gettext_locale_dir' => 'translations',
+            'gettext_text_domain' => 'my-domain',
+            'gettext_catalog_codeset' => 'UTF-8',
+            'gettext_locale' => array('en_GB.UTF-8', 'en_GB')
+        );
+        new \Gettext($config);
+    }
+
     private function _regex($expression, $successful = TRUE)
     {
         $log = ($successful ? 'info' : 'error') . '\|Gettext Library -> ';
@@ -81,25 +100,6 @@ class LibraryTest extends \PHPUnit_Framework_TestCase
     {
         $this->expectOutputRegex($this->_regex('check MO file exists'));
         $this->_loadLibraryWithOtherConfig();
-    }
-
-    private function _loadLibraryWithDefaultConfig()
-    {
-        $config = array();
-        // Load default config array
-        require(realpath(__DIR__ . '/../') . '/src/config/gettext.php');
-        new \Gettext($config);
-    }
-
-    private function _loadLibraryWithOtherConfig()
-    {
-        $config = array(
-            'gettext_locale_dir' => 'testTranslations',
-            'gettext_text_domain' => 'my-domain',
-            'gettext_catalog_codeset' => 'UTF-8',
-            'gettext_locale' => 'fr_FR'
-        );
-        new \Gettext($config);
     }
 
 }
