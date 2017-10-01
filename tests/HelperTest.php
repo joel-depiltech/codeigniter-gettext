@@ -10,6 +10,7 @@ class HelperTest extends \PHPUnit_Framework_TestCase
 
     public function testDoubleUnderscore()
     {
+        $this->expectOutputRegex('//');// only for avoid output when launch test
         $this->assertTrue(function_exists('__'), "__ function does not exists.");
         $this->assertEquals(self::EXPRESSION, __(self::EXPRESSION));
         $this->assertEquals(self::EXPRESSION, __(self::EXPRESSION, self::DOMAIN));
@@ -37,6 +38,7 @@ class HelperTest extends \PHPUnit_Framework_TestCase
 
     public function testUnderscoreN()
     {
+        $this->expectOutputRegex('//');// only for avoid output when launch test
         $this->assertTrue(function_exists('_n'), "_n function does not exists.");
 
         $this->assertEquals(
