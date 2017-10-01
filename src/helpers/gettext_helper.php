@@ -29,6 +29,9 @@ if (!function_exists('__')) {
         $t->loadTranslations($translations);
 
         return ($t->gettext($expression));
+
+        $CI = &get_instance();
+        return ($CI->gettext->gettext($expression));
     }
 }
 

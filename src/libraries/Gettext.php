@@ -3,7 +3,10 @@
 defined('BASEPATH') || exit('No direct script access allowed');
 // @codeCoverageIgnoreEnd
 
+use Gettext\Extractors\Po;
 use Gettext\GettextTranslator;
+use Gettext\Translations;
+use Gettext\Translator;
 
 /**
  * Codeigniter PHP framework library class for dealing with gettext.
@@ -15,7 +18,7 @@ use Gettext\GettextTranslator;
  * @author      Marko Martinović <marko@techytalk.info>
  * @link        https://github.com/joel-depiltech/codeigniter-gettext
  */
-class Gettext
+class Gettext extends Translator
 {
     /** @var string domain name match with file contains translation */
     private $_textDomain;
@@ -32,6 +35,8 @@ class Gettext
     /** @var int constant specifying the category of the functions affected by the locale setting */
     private $_category;
 
+    public $t;
+
     /**
      * Initialize Codeigniter PHP framework and get configuration
      *
@@ -45,6 +50,7 @@ class Gettext
         // Merge $config and config/gettext.php $config
         $config = array_merge(
             array(
+                'gettext_catalog_codeset' => config_item('gettext_catalog_codeset'),
                 'gettext_locale_dir' => config_item('gettext_locale_dir'),
                 'gettext_text_domain' => config_item('gettext_text_domain'),
                 'gettext_locale' => config_item('gettext_locale')
@@ -53,17 +59,74 @@ class Gettext
         );
         $this->_setConfig($config);
 
+        $this->init($config);
+    }
+
+    private static function _getPoFile(array $config)
+    {
+        $path = APPPATH . $config['gettext_locale_dir'] .'/';
+        $path .= $config['gettext_locale'];
+        $path .= ($config['gettext_catalog_codeset']
+            && !preg_match('/'.$config['gettext_catalog_codeset'].'/', $config['gettext_locale']) )
+            ? '.' . $config['gettext_catalog_codeset']
+            : ''
+        ;
+        $path .= '/LC_MESSAGES/' . $config['gettext_text_domain'] . '.po';
+
+        return($path);
+    }
+
+    private static function _getPhpArrayFile(array $config)
+    {
+        $path = APPPATH . $config['gettext_locale_dir'] .'/';
+        $path .= $config['gettext_text_domain'] . '-';
+        $path .= $config['gettext_locale'];
+        $path .= ($config['gettext_catalog_codeset']
+            && !preg_match('/'.$config['gettext_catalog_codeset'].'/', $config['gettext_locale']) )
+            ? '.' . $config['gettext_catalog_codeset']
+            : ''
+        ;
+        $path .= '.php';
+
+        return($path);
+    }
+
+
+    /**
+     * Initialize gettext inside Codeigniter PHP framework.
+     *
+     * @param array $config configuration
+     */
+    public function init(array $config)
+    {
+        $translations = new Translations();
+
+        Po::fromFile(self::_getPoFile($config), $translations);
+
+        //$translations = Gettext\Translations::fromPoFile(self::_getPoFile($config));
+
+        $translations->toPhpArrayFile(self::_getPhpArrayFile($config));
+
         // Create the translator instance
-        $t = new GettextTranslator();
+        //$this->t = new Translator();
+
+        $this->defaultDomain($config['gettext_text_domain']);
+        $this->loadTranslations($translations);
+
+        // Create the translator instance
+        $this->t = new GettextTranslator();
 
         // Set the language
-        $t->setLanguage($config['gettext_locale']);
+        $this->t->setLanguage($config['gettext_locale']);
 
         // Load the domain
-        $t->loadDomain(
+        $this->t->loadDomain(
             $config['gettext_text_domain'],
             APPPATH . $config['gettext_locale_dir']
         );
+
+        // Use the global functions as __()
+        $this->t->register();
 
         $this
             ->_bindTextDomainCodeSet()
@@ -228,6 +291,7 @@ class Gettext
 
         return $this;
     }
+
 }
 
 /* End of file Gettext.php */
