@@ -6,12 +6,12 @@ defined('BASEPATH') || exit('No direct script access allowed');
 /**
  * Codeigniter PHP framework library class for dealing with gettext.
  *
- * @package     CodeIgniter
- * @subpackage  Libraries
- * @category    Language
- * @author      Joël Gaujard <joel@depiltech.com>
- * @author      Marko Martinović <marko@techytalk.info>
- * @link        https://github.com/joel-depiltech/codeigniter-gettext
+ * @package    CodeIgniter
+ * @subpackage Libraries
+ * @category   Language
+ * @author     Joël Gaujard <joel@depiltech.com>
+ * @author     Marko Martinović <marko@techytalk.info>
+ * @link       https://github.com/joel-depiltech/codeigniter-gettext
  */
 class Gettext
 {
@@ -33,7 +33,6 @@ class Gettext
     /**
      * Initialize Codeigniter PHP framework and get configuration
      *
-     * @codeCoverageIgnore
      * @param array $config Override default configuration
      */
     public function __construct(array $config = array())
@@ -48,12 +47,12 @@ class Gettext
             ->_textDomain()
             ->_setLocale()
             ->_putEnv()
-            ->_checkLocaleFile()
-        ;
+            ->_checkLocaleFile();
     }
 
     /**
      * Merge config as parameter and default config (config/gettext.php file)
+     *
      * @param array $config
      */
     private function _setConfig(array $config = array())
@@ -76,6 +75,7 @@ class Gettext
 
     /**
      * Load a domain
+     *
      * @param string $domain
      */
     public function changeDomain($domain)
@@ -88,13 +88,13 @@ class Gettext
             ->_bindTextDomainCodeSet()
             ->_bindTextDomain()
             ->_textDomain()
-            ->_checkLocaleFile()
-        ;
+            ->_checkLocaleFile();
     }
 
     /**
      * Switch to a category
-     * @param $category
+     *
+     * @param string $category
      */
     public function changeCategory($category)
     {
@@ -107,6 +107,7 @@ class Gettext
 
     /**
      * Gettext catalog codeset
+     *
      * @return $this
      */
     private function _bindTextDomainCodeSet()
@@ -125,6 +126,7 @@ class Gettext
 
     /**
      * Path to gettext locales directory relative to APPPATH
+     *
      * @return $this
      */
     private function _bindTextDomain()
@@ -143,6 +145,7 @@ class Gettext
 
     /**
      * Gettext domain
+     *
      * @return $this
      */
     private function _textDomain()
@@ -159,6 +162,7 @@ class Gettext
 
     /**
      * Gettext locale
+     *
      * @return $this
      */
     private function _setLocale()
@@ -168,7 +172,7 @@ class Gettext
         log_message(
             (is_string($isSetLocale) ? 'info' : 'error'),
             'Gettext Library -> ' .
-            'Set locale: ' . (is_array($this->_locale) ? print_r($this->_locale, TRUE) : $this->_locale). ' ' .
+            'Set locale: ' . (is_array($this->_locale) ? print_r($this->_locale, TRUE) : $this->_locale) . ' ' .
             'for category: ' . $this->_category
         );
 
@@ -180,6 +184,7 @@ class Gettext
 
     /**
      * Change environment language for CLI
+     *
      * @return $this
      */
     private function _putEnv()
@@ -207,20 +212,24 @@ class Gettext
 
     /**
      * MO file exists for locale
+     *
      * @return $this
      */
     private function _checkLocaleFile()
     {
-        $file = APPPATH . $this->_localeDir . '/' . $this->_locale . '/LC_MESSAGES/' . $this->_textDomain . '.mo';
+        $file = APPPATH . $this->_localeDir .
+            '/' . $this->_locale . '/LC_MESSAGES/' . $this->_textDomain . '.mo';
 
         log_message(
-            (is_file($file) === TRUE ? 'info' : 'error'),
+            (is_file($file) ? 'info' : 'error'),
             'Gettext Library -> Check MO file exists: ' . $file
         );
 
         return $this;
     }
+
 }
 
+
 /* End of file Gettext.php */
-/* Location: ./libraries/gettext.php */
+/* Location: ./application/libraries/Gettext.php */
